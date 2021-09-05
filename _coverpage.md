@@ -10,4 +10,4 @@
 [GitHub](https://github.com/51wangping)
 [开始](./README.md)
 
-![](_media/background.jpeg)
+![color](#f0f0f0)

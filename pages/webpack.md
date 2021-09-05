@@ -236,3 +236,181 @@ module: {
   },
 ...
 ```
+
+##### importloaders 属性
+> 当css 文件中 引用了其他 css 文档。 webpack 匹配 css 按照 loader 顺序进行处理css 文件
+> 这时就算遇到了新的css 文件需要 postcss-loader 文件处理也不再返回上一步进行处理
+> 这时就需要使用 importloaders 返回 上一步进行处理
+
+```js
+rules: [
+      {
+        test: /\.css$/, // 一般写一个正则来匹配需要处理的文件
+        use: ['style-loader',
+        {
+          loader: 'css-loader',
+          options: {
+            importloaders: 1, // 返回上一步进行处理
+          }
+        },
+        'postcss-loader'] // 需要使用的loader， 顺序从后向前依次执行
+      },
+```
+
+##### file-loader 
+
+file-loader 默认使用 esModule 
+1. 如果使用require 但是进行引入 那么就需要  `require('ddd').default`
+2. 设置`file-loader => options  esModule: false`
+3. 使用`import img from ’./dd‘` 进行使用
+
+```js
+ {
+    test: /\.(png|svg|gif|jpe?g)$/,
+    use:[{
+      loader: 'file-loader',
+      options: {
+        esMoule: false
+      }
+    }]
+  }
+
+```
+
+###### 配置文件名称
+- [ext] 文件后缀类型
+- [name] 文件名
+- [hash] 文件hash值，webpack 每次打包都会产生一个hash 值
+- [contenthash] 文件内容hash
+- [hash：length] 文件hash长度
+
+```js
+...
+{
+    test: /\.(png|svg|gif|jpe?g)$/,
+    use:[{
+      loader: 'file-loader',
+      options: {
+        esModule: false, // 不转化为 esModule
+        name: '[name].[hash:10].[ext]',
+        outputPath: 'img'
+      }
+    }]
+  }
+...
+```
+
+##### url-loader 
+
+使用
+```js
+...
+{
+    test: /\.(png|svg|gif|jpe?g)$/,
+    use:[{
+      loader: 'url-loader',
+      options: {
+        name: '[name].[hash:10].[ext]',
+        limit: 8 * 1024 // 下小于 8kb 转base64
+      }
+    }]
+  }
+...
+```
+
+url-loader 和 file-loader 之间的区别
+1. url-loader 默认转为base64 url的方式加载到文件中，减少请求次数
+2. file-loader 将资源拷贝到指定的目录，分开请求。
+3. limit 设置文件最大 限制，超过就拷贝
+
+#### webpack 5 使用 asset 处理图片
+
+webpack 5 中内置 asset 模块
+1. asset/resource ----> file-loader   拷贝
+2. asset/inline ---- >  url-loader
+3. asset/source  ----> raw-loader
+
+``` js
+{
+    test: /\.(png|svg|gif|jpe?g)$/,
+    type: 'asset/resource',
+    generator: {
+      filename: 'img/[name].[hash:10][ext]'
+    }
+  }
+```
+设置asset 值
+``` js
+{
+    test: /\.(png|svg|gif|jpe?g)$/,
+    type: 'asset',
+    generator: {
+      filename: 'img/[name].[hash:10][ext]'
+    },
+    parser: {
+      dataUrlCondition: {
+        maxSize: 30 * 1024
+      }
+    }
+  }
+```
+
+###### asset 处理 图标 字体
+
+对数据进行拷贝
+
+```js
+{
+  test: /\.(ttf|woff2?)$/,
+  type: 'asset/resource',
+  generator: {
+    filename: 'font/[name].[hash:6][ext] '
+  }
+}
+```
+
+##### loader vs plugins
+
+1. loader: 对特定类型数据进行转换
+2. plugins： 做更多的事情， 可以在webpack 任意生命周期中做事情
+
+### webpack plugins
+
+#### clean-webpack-plugin
+使用 clean-webpack-plugin 打包时自动删除 文件
+
+安装
+```
+npm i clean-webpack-plugin -D
+```
+
+```js
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+
+···
+plugins: [
+    new CleanWebpackPlugin()
+  ],
+···
+```
+#### html-webpack-plugin
+使用 html-webpack-plugin 打包时自动删除 文件
+
+安装
+```
+npm i html-webpack-plugin -D
+```
+
+```js
+const  HtmlWebpackPlugin  = require('html-webpack-plugin')
+
+···
+plugins: [
+     new HtmlWebpackPlugin({
+      title: 'webpack ',
+      template : "./public/index.html"
+    })
+  ],
+···
+```
+
