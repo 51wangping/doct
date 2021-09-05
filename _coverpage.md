@@ -8,6 +8,6 @@
 - 等等等
 
 [GitHub](https://github.com/51wangping)
-[开始](#docsify)
+[开始](./README.md)
 
 ![](_media/background.jpeg)

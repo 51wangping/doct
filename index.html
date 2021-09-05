@@ -13,16 +13,28 @@
   <div id="app"></div>
   <script>
     window.$docsify = {
-      name: 'docsify',
       repo: 'https://github.com/51wangping',
       loadSidebar: true,
       auto2top: true,
-      coverpage: true
+      coverpage: true,
+      relativePath: true,
+      search: {
+      maxAge: 86400000, // 过期时间，单位毫秒，默认一天
+      paths: [], // or 'auto'
+      placeholder: '搜索',
+      noData: '未搜索到数据',
+      depth: 2,
+      hideOtherSidebarContent: false, // 是否隐藏其他侧边栏内容
+      // 匹配到的字符串将被用来识别索引
+      pathNamespaces: /^(\/(zh-cn|ru-ru))?(\/(v1|v2))?/
+      }
     }
   </script>
   <!-- Docsify v4 -->
+  <!--  docsify serve -->
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
 
 </body>
 </html>
